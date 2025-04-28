@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire Moderne</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s ease-in-out;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.8rem;
+            width: 100%;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Formulaire de Contact</h2>
+
+        <form action="#" th:action="@{/soumettre}" method="post" th:object="${utilisateur}">
+            
+            <div class="form-group">
+                <label for="nom">Nom complet :</label>
+                <input type="text" id="nom" th:field="*{nom}" placeholder="Entrez votre nom" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Adresse email :</label>
+                <input type="email" id="email" th:field="*{email}" placeholder="Entrez votre email" required>
+            </div>
+
+            <button type="submit">Soumettre</button>
+        </form>
+
+        <div class="form-footer">
+            <p>Merci de soumettre vos informations.</p>
+        </div>
+    </div>
+
+</body>
+</html>
