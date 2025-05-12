@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    environment {
+    
+        SONARQUBE = 'SonarQube-v10'
+    }
+
+    stages {
+        stage('Cloner projet') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hasnahatti70/EKS.git'
+            }
+        }
+
+        stage('Build Maven') {
+            steps {
+                dir('formulaire') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Analyse SonarQube') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    dir('formulaire') {
+                        sh 'mvn sonar:sonar'
+                    }
+                }
+            }
+        }
+
+        stage('Déploiement OpenShift') {
+            steps {
+                script {
+                    dir('formulaire') {
+                        sh '''
+                        oc login --token=TON_TOKEN --server=TON_SERVEUR
+                        oc project hasnahatti70-dev
+                        oc apply -f deployment.yaml
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline terminée avec succès'
+        }
+        failure {
+            echo '❌ Une erreur est survenue'
+        }
+    }
+}
