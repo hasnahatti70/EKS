@@ -2,49 +2,45 @@ pipeline {
     agent any
 
     tools {
-        maven 'MAVEN' // Le nom que tu as défini dans Global Tool Configuration
+        maven 'Maven' // Le nom défini dans Jenkins > Global Tool Configuration
     }
 
     environment {
-        SONARQUBE = 'SonarQube-10'   // Nom défini dans "SonarQube servers"
+        SONARQUBE = 'SonarQube' // Le nom du serveur défini dans Jenkins > System > SonarQube
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/hasnahatti70/EKS.git'
             }
         }
 
         stage('Build avec Maven') {
             steps {
-                sh 'mvn clean package'
+                dir('formulaire') {
+                    sh 'mvn clean package'
+                }
             }
         }
 
         stage('Analyse SonarQube') {
             steps {
-                withSonarQubeEnv("${SONARQUBE}") {
-                    sh '''
-                        mvn sonar:sonar \
-                        -Dsonar.projectKey=formulaire \
-                        -Dsonar.projectName=formulaire \
-                        -Dsonar.projectVersion=1.0 \
-                        -Dsonar.sources=src/main/java \
-                        -Dsonar.tests=src/test/java \
-                        -Dsonar.java.binaries=target/classes
-                    '''
+                withSonarQubeEnv('SonarQube') {
+                    dir('formulaire') {
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
     }
 
     post {
-        success {
-            echo 'Analyse SonarQube terminée avec succès 🎉'
-        }
         failure {
             echo 'La pipeline a échoué ❌'
+        }
+        success {
+            echo 'Pipeline terminée avec succès ✅'
         }
     }
 }
