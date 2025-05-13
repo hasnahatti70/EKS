@@ -2,25 +2,32 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'
+        maven 'Maven' // Le nom défini dans Jenkins > Global Tool Configuration
     }
 
     environment {
-    
-        SONARQUBE = 'SonarQube-v10'
+        SONARQUBE = 'SonarQube-v10' // Le nom du serveur défini dans Jenkins > System > SonarQube
     }
 
     stages {
-        stage('Cloner projet') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/hasnahatti70/EKS.git'
             }
         }
 
-        stage('Build Maven') {
+        stage('Build avec Maven') {
             steps {
                 dir('formulaire') {
-                    sh 'mvn clean package'
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir('formulaire') {
+                    sh 'mvn test'
                 }
             }
         }
@@ -34,28 +41,14 @@ pipeline {
                 }
             }
         }
-
-        stage('Déploiement OpenShift') {
-            steps {
-                script {
-                    dir('formulaire') {
-                        sh '''
-                        oc login --token=TON_TOKEN --server=TON_SERVEUR
-                        oc project hasnahatti70-dev
-                        oc apply -f deployment.yaml
-                        '''
-                    }
-                }
-            }
-        }
     }
 
     post {
-        success {
-            echo '✅ Pipeline terminée avec succès'
-        }
         failure {
-            echo '❌ Une erreur est survenue'
+            echo 'La pipeline a échoué ❌'
+        }
+        success {
+            echo 'Pipeline terminée avec succès ✅'
         }
     }
 }
