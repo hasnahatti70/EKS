@@ -19,7 +19,15 @@ pipeline {
         stage('Build avec Maven') {
             steps {
                 dir('formulaire') {
-                    sh 'mvn clean package'
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir('formulaire') {
+                    sh 'mvn test'
                 }
             }
         }
