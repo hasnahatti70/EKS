@@ -1,13 +1,18 @@
 package com.example.formulaire;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class FormulaireApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void applicationStartsCorrectly() {
+        String[] args = {};
+        try {
+            FormulaireApplication.main(args);
+            assertTrue(true); // passe si l'app démarre sans erreur
+        } catch (Exception e) {
+            fail("L'application ne démarre pas : " + e.getMessage());
+        }
+    }
 }
