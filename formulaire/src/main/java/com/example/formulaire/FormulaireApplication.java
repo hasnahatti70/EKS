@@ -15,5 +15,7 @@ public class FormulaireApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FormulaireApplication.class, args);
 	}
-
+         public String getAppName() {
+             return "formulaire";
+}
 }
