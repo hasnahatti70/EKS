@@ -2,17 +2,19 @@ package com.example.formulaire;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 class FormulaireApplicationTests {
 
-    @Test
-    void applicationStartsCorrectly() {
-        String[] args = {};
-        try {
-            FormulaireApplication.main(args);
-            assertTrue(true); // passe si l'app démarre sans erreur
-        } catch (Exception e) {
-            fail("L'application ne démarre pas : " + e.getMessage());
-        }
-    }
+	@Test
+	void contextLoads() {
+	}
+
+	@Test
+	void testAddition() {
+		FormulaireApplication app = new FormulaireApplication();
+		int result = app.addition(3, 2);
+		assertEquals(5, result);
+	}
 }
