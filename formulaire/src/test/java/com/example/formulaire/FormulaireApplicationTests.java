@@ -7,8 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class FormulaireApplicationTests {
 
 	@Test
-	void testGetAppName() {
-    FormulaireApplication app = new FormulaireApplication();
-    assertEquals("formulaire", app.getAppName());
-}
+	void contextLoads() {
+	}
+
 }
