@@ -11,9 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "com.example.formulaire.repository")
 @EntityScan(basePackages = "com.example.formulaire.model")
 public class FormulaireApplication {
-       public String getAppName() {
-             return "formulaire";
-}
 
 	public static void main(String[] args) {
 		SpringApplication.run(FormulaireApplication.class, args);
