@@ -9,5 +9,11 @@ class FormulaireApplicationTests {
 	@Test
 	void contextLoads() {
 	}
+	@Test
+void testGetAppName() {
+    FormulaireApplication app = new FormulaireApplication();
+    assertEquals("formulaire", app.getAppName());
+}
+
 
 }
