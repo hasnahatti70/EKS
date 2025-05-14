@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+
+
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.example.formulaire.repository")
 @EntityScan(basePackages = "com.example.formulaire.model")
@@ -14,8 +16,4 @@ public class FormulaireApplication {
 		SpringApplication.run(FormulaireApplication.class, args);
 	}
 
-	// ✅ Méthode simple à tester
-	public int addition(int a, int b) {
-		return a + b;
-	}
 }
