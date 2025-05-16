@@ -20,12 +20,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build with Maven
-        run: mvn clean verify
+      - name: Build and generate Jacoco report
+        run: mvn clean verify jacoco:report
 
       - name: SonarQube Analysis
         run: |
           mvn sonar:sonar \
             -Dsonar.projectKey=com.example:formulaire \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
