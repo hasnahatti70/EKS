@@ -1,54 +1,41 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven' // Le nom défini dans Jenkins > Global Tool Configuration
-    }
-
     environment {
-        SONARQUBE = 'SonarQube-v10' // Le nom du serveur défini dans Jenkins > System > SonarQube
+        SONARQUBE = 'SonarQube-10'
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/hasnahatti70/EKS.git'
+                git branch: 'main', url: 'https://github.com/hasnahatti70/ReactJS-Spring-Boot-CRUD-Full-Stack-App'
             }
         }
 
-        stage('Build avec Maven') {
+        stage('Build') {
             steps {
-                dir('formulaire') {
-                    sh 'mvn clean package -DskipTests'
+                dir('springboot-backend') {
+                    sh 'mvn clean verify'
                 }
             }
         }
 
-        stage('Tests') {
+        stage('SonarQube Analysis') {
             steps {
-                dir('formulaire') {
-                    sh 'mvn test'
-                }
-            }
-        }
-
-        stage('Analyse SonarQube') {
-            steps {
-                withSonarQubeEnv('SonarQube-10') {
-                    dir('formulaire') {
-                        sh 'mvn sonar:sonar'
+                withSonarQubeEnv("${SONARQUBE}") {
+                    dir('springboot-backend') {
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=springcrud'
                     }
                 }
             }
         }
-    }
 
-    post {
-        failure {
-            echo 'La pipeline a échoué ❌'
-        }
-        success {
-            echo 'Pipeline terminée avec succès ✅'
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
         }
     }
 }
