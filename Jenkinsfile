@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven' // Nom défini dans Jenkins > Global Tool Configuration
+        maven 'Maven'
     }
 
     environment {
-        SONARQUBE = 'SonarQube-v10' // Le nom défini dans "Manage Jenkins > Configure System"
+        SONARQUBE = 'SonarQube-10'
     }
 
     stages {
@@ -35,10 +35,8 @@ pipeline {
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv("${SONARQUBE}") {
-                    withCredentials([string(credentialsId: '8cc29e18-77c3-45bc-9f81-21ded76ad1d4', variable: 'TOKEN')]) {
-                        dir('formulaire') {
-                            sh 'mvn sonar:sonar -Dsonar.projectKey=formulaire -Dsonar.token=$TOKEN'
-                        }
+                    dir('formulaire') {
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=formulaire'
                     }
                 }
             }
