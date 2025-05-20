@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SONARQUBE = 'SonarQube-v10' // Nom exact du serveur SonarQube configuré
+        SONARQUBE = 'SonarQube-v10' // Le nom défini dans "Manage Jenkins > Configure System"
     }
 
     stages {
@@ -35,7 +35,7 @@ pipeline {
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv("${SONARQUBE}") {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'TOKEN')]) {
+                    withCredentials([string(credentialsId: '8cc29e18-77c3-45bc-9f81-21ded76ad1d4', variable: 'TOKEN')]) {
                         dir('formulaire') {
                             sh 'mvn sonar:sonar -Dsonar.projectKey=formulaire -Dsonar.token=$TOKEN'
                         }
