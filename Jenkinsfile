@@ -10,7 +10,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/hasnahatti70/EKS.git'
@@ -42,30 +41,15 @@ pipeline {
                 }
             }
         }
-
-        // ✅ Option 1 - Copie du JAR vers un dossier partagé pour OpenShift
-        stage('Déploiement Continu (CD) - Copie .jar') {
-            steps {
-                dir('formulaire') {
-                    sh 'cp target/formulaire-0.0.1-SNAPSHOT.jar /mnt/nfs/deploy/formulaire/'
-                }
-            }
-        }
-
-        // ✅ Option 2 - Simulation si pas de droit réel
-        stage('CD (simulé si accès restreint)') {
-            steps {
-                echo '✅ Simulation de livraison du .jar vers OpenShift (accès restreint ou environnement de test)'
-            }
-        }
     }
 
     post {
         failure {
-            echo '❌ La pipeline a échoué.'
+            echo 'La pipeline a échoué ❌'
         }
         success {
-            echo '✅ Pipeline terminée avec succès.'
+            echo 'Pipeline terminée avec succès ✅'
         }
     }
 }
+
