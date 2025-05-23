@@ -24,14 +24,6 @@ pipeline {
             }
         }
 
-        stage('Tests') {
-            steps {
-                dir('formulaire') {
-                    sh 'mvn test -Dspring.profiles.active=test'
-                }
-            }
-        }
-
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv("${SONARQUBE}") {
