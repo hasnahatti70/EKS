@@ -27,15 +27,8 @@ pipeline {
         stage('Tests') {
             steps {
                 dir('formulaire') {
-                    sh '''
-                        mvn test \
-                          -Dspring.datasource.url=jdbc:h2:mem:testdb \
-                          -Dspring.datasource.driver-class-name=org.h2.Driver \
-                          -Dspring.datasource.username=sa \
-                          -Dspring.datasource.password= \
-                          -Dspring.jpa.database-platform=org.hibernate.dialect.H2Dialect \
-                          -Dspring.jpa.hibernate.ddl-auto=create-drop
-                    '''
+                    sh 'mvn test'
+                
                 }
             }
         }
