@@ -1,7 +1,13 @@
 pipeline {
     agent any
-    tools { maven 'Maven' }
-    environment { SONARQUBE = 'SonarQube-10' }
+
+    tools {
+        maven 'Maven'
+    }
+
+    environment {
+        SONARQUBE = 'SonarQube-10'
+    }
 
     stages {
         stage('Checkout Code') {
@@ -36,14 +42,16 @@ pipeline {
             }
         }
 
-
-       stage('Déploiement sur OpenShift') {
-          steps {
-            withCredentials([file(credentialsId: 'kubeconfig-hasna', variable: 'KUBECONFIG')]) {
-                sh 'oc start-build formulaire --from-file=formulaire/target/formulaire-0.0.1-SNAPSHOT.jar --follow'
+        stage('Déploiement sur OpenShift') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig-hasna', variable: 'KUBECONFIG')]) {
+                    dir('formulaire') {
+                        sh 'oc start-build formulaire --from-file=target/formulaire-0.0.1-SNAPSHOT.jar --follow'
+                    }
+                }
+            }
         }
     }
-}
 
     post {
         failure {
