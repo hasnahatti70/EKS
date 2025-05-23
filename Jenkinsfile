@@ -45,8 +45,11 @@ pipeline {
         stage('Déploiement sur OpenShift') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig-hasna', variable: 'KUBECONFIG')]) {
-                    dir('formulaire') {
-                        sh 'oc start-build formulaire --from-file=target/formulaire-0.0.1-SNAPSHOT.jar --follow'
+                    script {
+                        dir('formulaire') {
+                            sh 'oc start-build formulaire --from-file=target/formulaire-0.0.1-SNAPSHOT.jar --follow'
+                        }
+                        sh 'oc apply -f formulaire-all.yaml'
                     }
                 }
             }
