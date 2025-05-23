@@ -1,13 +1,7 @@
 pipeline {
     agent any
-
-    tools {
-        maven 'Maven'
-    }
-
-    environment {
-        SONARQUBE = 'SonarQube-10'
-    }
+    tools { maven 'Maven' }
+    environment { SONARQUBE = 'SonarQube-10' }
 
     stages {
         stage('Checkout Code') {
@@ -41,6 +35,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Déploiement sur OpenShift') {
+            steps {
+                sh 'oc start-build formulaire --from-file=formulaire/target/formulaire-0.0.1-SNAPSHOT.jar --follow'
+            }
+        }
     }
 
     post {
@@ -52,4 +60,3 @@ pipeline {
         }
     }
 }
-
