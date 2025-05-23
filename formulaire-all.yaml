@@ -17,9 +17,21 @@ spec:
       containers:
         - name: formulaire
           image: image-registry.openshift-image-registry.svc:5000/hasnahatti70-dev/formulaire:latest
-
           ports:
             - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-deployment-service:5432/ma_base
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
           readinessProbe:
             httpGet:
               path: /
