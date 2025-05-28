@@ -16,6 +16,18 @@ pipeline {
             }
         }
 
+        stage('Gitleaks Scan') {
+            steps {
+                bat '''
+                echo 🔍 Utilisation de Gitleaks local installé...
+                "C:\\Users\\MTechno\\Downloads\\gitleaks_8.26.0_windows_x64\\gitleaks.exe" detect --source=. --verbose --report-format=json --report-path=gitleaks-report.json || exit /b 0
+
+                echo 📄 Résultats du scan Gitleaks :
+                type gitleaks-report.json || echo ⚠️ Aucun résultat trouvé.
+                '''
+            }
+        }
+
         stage('Build avec Maven') {
             steps {
                 dir('formulaire') {
@@ -28,7 +40,6 @@ pipeline {
             steps {
                 dir('formulaire') {
                     sh 'mvn test'
-                
                 }
             }
         }
@@ -63,6 +74,9 @@ pipeline {
         }
         success {
             echo 'Pipeline terminée avec succès ✅'
+        }
+        always {
+            archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
         }
     }
 }
