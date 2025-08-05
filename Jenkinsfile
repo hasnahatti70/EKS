@@ -44,15 +44,23 @@ pipeline {
             }
         }
 
-        stage('Analyse SonarQube') {
+          stage('SonarQube Analysis with Token') {
+            environment {
+                SONAR_HOST_URL = 'https://sonarqube-v10-hasnahatti70-dev.apps.rm2.thpm.p1.openshiftapps.com/' // ← à remplacer par ton URL réelle sur OpenShift
+            }
             steps {
-                withSonarQubeEnv("${SONARQUBE}") {
-                    dir('formulaire') {
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=formulaire'
-                    }
+                withCredentials([string(credentialsId: 'banking-app', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        mvn sonar:sonar \
+                          -Dsonar.projectKey=banking-app \
+                          -Dsonar.projectName=banking-app \
+                          -Dsonar.host.url=${SONAR_HOST_URL} \
+                          -Dsonar.login=${SONAR_TOKEN}
+                    '''
                 }
             }
         }
+    }
 
         stage('Build Docker') {
             steps {
