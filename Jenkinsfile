@@ -54,6 +54,19 @@ pipeline {
             }
         }
 
+        stage('Build Docker') {
+            steps {
+                script {
+                    dir('formulaire') {
+                        sh '''
+                        echo  Build de l'image Docker...
+                        docker build -t formulaire-app:latest .
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Déploiement sur OpenShift') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig-hasna', variable: 'KUBECONFIG')]) {
