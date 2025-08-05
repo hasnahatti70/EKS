@@ -44,30 +44,31 @@ pipeline {
             }
         }
 
-          stage('SonarQube Analysis with Token') {
+        stage('SonarQube Analysis with Token') {
             environment {
-                SONAR_HOST_URL = 'https://sonarqube-v10-hasnahatti70-dev.apps.rm2.thpm.p1.openshiftapps.com/' // ← à remplacer par ton URL réelle sur OpenShift
+                SONAR_HOST_URL = 'https://sonarqube-v10-hasnahatti70-dev.apps.rm2.thpm.p1.openshiftapps.com/' // ← Remplace bien par l'URL réelle
             }
             steps {
                 withCredentials([string(credentialsId: 'banking-app', variable: 'SONAR_TOKEN')]) {
-                    sh '''
+                    dir('formulaire') {
+                        sh '''
                         mvn sonar:sonar \
                           -Dsonar.projectKey=banking-app \
                           -Dsonar.projectName=banking-app \
                           -Dsonar.host.url=${SONAR_HOST_URL} \
                           -Dsonar.login=${SONAR_TOKEN}
-                    '''
+                        '''
+                    }
                 }
             }
         }
-    }
 
         stage('Build Docker') {
             steps {
                 script {
                     dir('formulaire') {
                         sh '''
-                        echo  Build de l'image Docker...
+                        echo 🐳 Build de l'image Docker...
                         docker build -t formulaire-app:latest .
                         '''
                     }
@@ -81,8 +82,8 @@ pipeline {
                     script {
                         dir('formulaire') {
                             sh 'oc start-build formulaire --from-file=target/formulaire-0.0.1-SNAPSHOT.jar --follow'
+                            sh 'oc apply -f formulaire-all.yaml'
                         }
-                        sh 'oc apply -f formulaire-all.yaml'
                     }
                 }
             }
